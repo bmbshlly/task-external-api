@@ -15,23 +15,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "/client/build")));
 
 // api routes
-app.get("/", (req, res) => res.status(200).send("Hello you did it 🚀"));
-//app.get("/", (req, res) => {res.sendFile(path.join(__dirname, "client", "build", "index.html"));});
-
-app.get("/test", async (req, res) => {
-  let rr = 2;
-  axios(
-    `https://terriblytinytales.com/testapi?rollnumber=6`,
-    (error, response, body) => {
-      rr = body;
-    }
-  )
-    .then(res.status(201).send(rr))
-    .catch((error) => {
-      assert.isNotOk(error, "Promise error");
-      done();
-    });
-});
+app.get("/", (req, res) => {res.sendFile(path.join(__dirname, "client", "build", "index.html"));});
 
 app.get("/rollnumber", async (req, res) => {
   const str = req.query.str;
