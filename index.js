@@ -40,7 +40,7 @@ app.get("/rollnumber", async (req, res) => {
     );
   }
 
-  Promise.all(promises)
+  axios.all(promises)
     .then(res.status(201).send(arr))
     .catch(() => {
       console.log("Promise error");
