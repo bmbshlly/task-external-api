@@ -24,7 +24,7 @@ app.get("/rollnumber", async (req, res) => {
   for (let i = 0; i < arr.length; i++) {
     arr[i] = Number(arr[i]);
     promises.push(
-      await axios(`https://terriblytinytales.com/testapi?rollnumber=${arr[i]}`)
+      axios(`https://terriblytinytales.com/testapi?rollnumber=${arr[i]}`)
         .then((response) => {
           if (response.status == 200) {
             if (response.data == "Fail") {
