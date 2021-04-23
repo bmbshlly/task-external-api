@@ -6,6 +6,7 @@ import axios from "axios";
 
 // app config
 const app = express();
+
 const __dirname = path.resolve();
 const port = process.env.PORT || 9000;
 
@@ -15,35 +16,34 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "/client/build")));
 
 // api routes
-app.get("/", (req, res) => {res.sendFile(path.join(__dirname, "client", "build", "index.html"));});
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
 
-app.get("/rollnumber", async (req, res) => {
+app.get("/rollnumber", (req, res) => {
   const str = req.query.str;
   const arr = str.split(",");
   const promises = [];
   for (let i = 0; i < arr.length; i++) {
     arr[i] = Number(arr[i]);
     promises.push(
-    await axios(`https://terriblytinytales.com/testapi?rollnumber=${arr[i]}`)
-        .then((response) => {
-          if (response.status == 200) {
-            if (response.data == "Fail") {
-              arr[i] = 0;
-            } else {
-              arr[i] = 1;
-            }
-          }
-        })
-        .catch(() => {
-          console.log("didnt run");
-        })
+      axios.get(`https://terriblytinytales.com/testapi?rollnumber=${arr[i]}`)
     );
   }
-
-  axios.all(promises)
-    .then(res.status(201).send(arr))
+  axios
+    .all(promises)
+    .then((result) => {
+      for (let i = 0; i < arr.length; i++) {
+        if (result[i].data == "Fail") {
+          arr[i] = 0;
+        } else {
+          arr[i] = 1;
+        }
+      }
+      return res.status(201).send(arr);
+    })
     .catch(() => {
-      console.log("Promise error");
+      console.log("didnt run");
     });
 });
 
